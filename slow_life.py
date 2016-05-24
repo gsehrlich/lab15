@@ -1,7 +1,7 @@
 import numpy as np
 import pyglet
 
-n = 100
+n = 10
 
 # fill the board randomly (but with a known seed for repeatability)
 np.random.seed(1)
@@ -9,10 +9,10 @@ board = [[np.random.randint(0, 2) for i in range(n)] for j in range(n)]
 
 """
 # the smarter way to do it
-def get_nbhd(i, j, board):
+def get_nbhd(i, j, n):
     "Return the list of coordinates of neighbors of i, j"
-    return [(i + di, j + dj) for di in (-1, 0, 1) for dj in (-1, 0, 1)
-        if di != or dj != 0]
+    return [(i + di, j + dj) for di in (-1, 0, 1) for dj in (-1, 0, 1) 
+        if 0 <= i + di < n and 0 <= j + dj < n and (di != 0 or dj != 0)]
 """
 
 def is_neighbor(i1, j1, i2, j2):
@@ -34,9 +34,9 @@ def live_or_die(board):
             # alive ones there are, but only if they're neighbors
             for i_neighbor in range(n):
                 for j_neighbor in range(n):
-                    neighbor_val = board[i_neighbor][j_neighbor]
-                    if is_neighbor(i, j, i_neighbor, j_neighbor):
-                        n_alive_neighbors += neighbor_val
+                        neighbor_val = board[i_neighbor][j_neighbor]
+                        if is_neighbor(i, j, i_neighbor, j_neighbor):
+                            n_alive_neighbors += neighbor_val
 
             # determine whether cell lives or dies
             if board[i][j] == 1:
@@ -55,8 +55,6 @@ def live_or_die(board):
 
 def do_life(n_steps=100, plot=False):
     if plot:
-
-        pyglet.app.run()
         plot(board)
 
     for t in range(n_steps):
